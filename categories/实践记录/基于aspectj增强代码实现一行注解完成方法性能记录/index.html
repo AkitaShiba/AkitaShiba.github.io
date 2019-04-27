@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Jarvis&#39;s share">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="https://AkitaShiba.github.io/img/home_background.jpg">
+    <meta property="twitter:image" content="https://AkitaShiba.github.io/img/home_background.jpg" />
+    
+
+    
+    <meta name="title" content="基于AspectJ增强代码" />
+    <meta property="og:title" content="基于AspectJ增强代码" />
+    <meta property="twitter:title" content="基于AspectJ增强代码" />
+    
+
+    
+    <meta name="description" content="想要分享的，关乎技术，关于阅读，关乎人生">
+    <meta property="og:description" content="想要分享的，关乎技术，关于阅读，关乎人生" />
+    <meta property="twitter:description" content="想要分享的，关乎技术，关于阅读，关乎人生" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>基于AspectJ增强代码-绝味的日常 | Jarvis‘s share</title>
+
+    <link rel="canonical" href="/categories/%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/%E5%9F%BA%E4%BA%8Easpectj%E5%A2%9E%E5%BC%BA%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%80%E8%A1%8C%E6%B3%A8%E8%A7%A3%E5%AE%8C%E6%88%90%E6%96%B9%E6%B3%95%E6%80%A7%E8%83%BD%E8%AE%B0%E5%BD%95/">
+
+    <link rel="stylesheet" href="/css/iDisqus.min.css"/>
+	
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    
+    
+    <script src="/js/jquery.min.js"></script>
+    
+    
+    <script src="/js/bootstrap.min.js"></script>
+    
+    
+    <script src="/js/hux-blog.min.js"></script>
+	
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/docco.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jarvis&#39;s share</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/categories/%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95">实践记录</a>
+                    </li>
+                    
+                    
+		    
+                        <li><a href="/site/">关于本站</a></li>
+                    
+
+                    
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/home_background.jpg')
+    }
+</style>
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/aspectj" title="AspectJ">
+                            AspectJ
+                        </a>
+                        
+                        <a class="tag" href="/tags/%E6%80%A7%E8%83%BD" title="性能">
+                            性能
+                        </a>
+                        
+                    </div>
+                    <h1>基于AspectJ增强代码</h1>
+                    <h2 class="subheading">实现一行注解完成方法性能记录</h2>
+                    <span class="meta">
+			Posted by 
+			
+			         &#34;Jarvis&#34;
+			 
+			on 
+			Saturday, April 27, 2019
+                        
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <header>
+                    <h2>TOC</h2>
+                </header>
+                <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#背景">背景</a></li>
+<li><a href="#技术选型">技术选型</a></li>
+<li><a href="#技术实现">技术实现</a>
+<ul>
+<li><a href="#1-自定义注解">1、自定义注解</a></li>
+<li><a href="#2-引入aspectj依赖">2、引入Aspectj依赖</a></li>
+<li><a href="#3-aspectj切面">3、Aspectj切面</a></li>
+<li><a href="#4-引入maven编译插件">4、引入maven编译插件</a></li>
+<li><a href="#5-在目标方法上加入-timeconsumelogannotation注解编译运行即可">5、在目标方法上加入@TimeConsumeLogAnnotation注解编译运行即可</a></li>
+<li><a href="#6-踩过的坑">6、踩过的坑</a>
+<ul>
+<li><a href="#1-切面执行两次">（1）切面执行两次</a></li>
+<li><a href="#2-多模块项目aspectj编译失败">（2）多模块项目aspectj编译失败</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#更多的操作">更多的操作</a></li>
+<li><a href="#参考链接">参考链接</a></li>
+</ul></li>
+</ul>
+</nav>
+                
+                
+
+<h2 id="背景">背景</h2>
+
+<p>因需要对项目性能测试，并追踪每一条日志进来后的处理状态.以性能记录为例，如果在每个方法前后都加上如下代码</p>
+
+<pre><code>long beginTime = System.currentTimeMillis(); 
+
+long endTime = System.currentTimeMillis(); 
+
+long timeConsume = endTime - beginTime; 
+
+</code></pre>
+
+<p>显然会让代码变得非常冗杂，而且需要统计性能的地方可能还会有很多，如果可以单纯在方法上加上一个注解，就能实现方法执行耗时的记录，这样便能减少许多简单且繁琐的代码，更加方便的扩展</p>
+
+<h2 id="技术选型">技术选型</h2>
+
+<p>像这种场景就是典型的AOP场景，搜索SpringAOP就能找到很多的代码样例，但是项目并不依赖于Spring， 也没有必要引入Spring。通常要实现这样的功能，有两种方案，一种是像SpringAOP那样，通过CGLib动态代理或JDK动态代理，在创建对象的时候，动态地生成代理类的对象，另一种是AspectJ，在编译代码的时候就将需要执行的逻辑织入到字节码中。</p>
+
+<p>对于动态代理，需要创建代理类的对象，才可以增强，而项目中，存在很多静态方法，在使用的时候并不通过对象来调用，而且即便是通过对象来调用的方法，没有Spring方便的IOC机制，也得修改所有代码中new对象的处理，才可以使用增强后的代理对象，略麻烦。而且如果是频繁的创建对象，因为还有一步创建代理对象的操作，性能上会有一定的损失。</p>
+
+<p>对于AspectJ这种方式，则可以对满足切点表达式的地方，都织入增强后的逻辑，但是需要依赖于织入工具的协助，来对编译后的字节码进行增强。幸好maven上已经有对应的aspectj编译插件，可以很方便的处理织入</p>
+
+<p>综合考虑之下，决定采用自定义注解（指定目标）+ ApsectJ(Aop增强) + aspectj的Maven编译插件来实现</p>
+
+<h2 id="技术实现">技术实现</h2>
+
+<h3 id="1-自定义注解">1、自定义注解</h3>
+
+<pre><code>@Retention(RetentionPolicy.RUNTIME) 
+
+@Target(ElementType.METHOD) 
+
+public @interface TimeConsumeLogAnnotation { 
+
+} 
+
+</code></pre>
+
+<h3 id="2-引入aspectj依赖">2、引入Aspectj依赖</h3>
+
+<pre><code>&lt;dependency&gt; 
+
+​    &lt;groupId&gt;org.aspectj&lt;/groupId&gt; 
+
+​    &lt;artifactId&gt;aspectjrt&lt;/artifactId&gt; 
+
+​    &lt;version&gt;1.8.9&lt;/version&gt; 
+
+&lt;/dependency&gt; 
+
+</code></pre>
+
+<h3 id="3-aspectj切面">3、Aspectj切面</h3>
+
+<pre><code>@Aspect 
+
+public class TimeConsumeLogAspectJ { 
+
+​    //通过ThreadLocal隔离不同线程的变量 
+
+​    ThreadLocal&lt;Long&gt; timeRecord = new ThreadLocal&lt;&gt;(); 
+
+​    @Pointcut(&quot;execution(* *(..)) &amp;&amp; @annotation(com.sf.isic.rrcs.engine.annotation.TimeConsumeLogAnnotation)&quot;) 
+
+​    public void jointPoint(){} 
+
+​    @Before(&quot;jointPoint()&quot;) 
+
+​    public void doBefore(JoinPoint joinPoint){ 
+
+​        MethodSignature signature = (MethodSignature) joinPoint.getSignature(); 
+
+​        Method method = signature.getMethod(); 
+
+​        System.out.println(&quot;方法&quot; + method.getName() + &quot;开始&quot;); 
+
+​        timeRecord.set(System.currentTimeMillis()); 
+
+​    } 
+
+​    @After(&quot;jointPoint()&quot;) 
+
+​    public void doAfter(JoinPoint joinPoint){ 
+
+​        long beginTime = timeRecord.get(); 
+
+​        System.out.println(&quot;方法&quot; +joinPoint.getSignature().getName()+ &quot;结束,耗时&quot;+(System.currentTimeMillis()-beginTime) +&quot;ms&quot;); 
+
+​    } 
+
+} 
+
+</code></pre>
+
+<h3 id="4-引入maven编译插件">4、引入maven编译插件</h3>
+
+<p>在maven-compiler-plugin处理完之后再工作</p>
+
+<pre><code>&lt;plugin&gt; 
+
+​    &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt; 
+
+​    &lt;artifactId&gt;aspectj-maven-plugin&lt;/artifactId&gt; 
+
+​    &lt;version&gt;1.10&lt;/version&gt; 
+
+​    &lt;configuration&gt; 
+
+​        &lt;source&gt;1.8&lt;/source&gt; 
+
+​        &lt;target&gt;1.8&lt;/target&gt; 
+
+​        &lt;complianceLevel&gt;1.8&lt;/complianceLevel&gt; 
+
+​    &lt;/configuration&gt; 
+
+​    &lt;executions&gt; 
+
+​        &lt;execution&gt; 
+
+​            &lt;phase&gt;compile&lt;/phase&gt; 
+
+​            &lt;goals&gt; 
+
+​                &lt;goal&gt;compile&lt;/goal&gt; 
+
+​            &lt;/goals&gt; 
+
+​        &lt;/execution&gt; 
+
+​    &lt;/executions&gt; 
+
+&lt;/plugin&gt; 
+
+</code></pre>
+
+<h3 id="5-在目标方法上加入-timeconsumelogannotation注解编译运行即可">5、在目标方法上加入@TimeConsumeLogAnnotation注解编译运行即可</h3>
+
+<pre><code class="language-java">@TimeConsumeLogAnnotation() 
+
+public static void sayHelloWorld(String name) { 
+
+​    System.out.println(&quot;Hello &quot; + name); 
+
+} 
+
+</code></pre>
+
+<p>编译后的字节码</p>
+
+<pre><code class="language-java">@TimeConsumeLogAnnotation 
+
+public static void sayHelloWorld(String name) { 
+
+​    JoinPoint var1 = Factory.makeJP(ajc$tjp_0, (Object)null, (Object)null, name); 
+
+​    try { 
+
+​        TimeConsumeLogAspectJ.aspectOf().doBefore(var1); 
+
+​        System.out.println(&quot;Hello &quot; + name); 
+
+​    } catch (Throwable var4) { 
+
+​        TimeConsumeLogAspectJ.aspectOf().doAfter(var1); 
+
+​        throw var4; 
+
+​    } 
+
+​    TimeConsumeLogAspectJ.aspectOf().doAfter(var1); 
+
+} 
+
+</code></pre>
+
+<p>效果</p>
+
+<pre><code>方法sayHelloWorld开始 
+
+Hello world 
+
+方法sayHelloWorld结束,耗时1ms 
+
+</code></pre>
+
+<h3 id="6-踩过的坑">6、踩过的坑</h3>
+
+<h4 id="1-切面执行两次">（1）切面执行两次</h4>
+
+<p>在一开始切面的表达式为</p>
+
+<pre><code class="language-java">@Pointcut(&quot;@annotation(com.sf.isic.rrcs.engine.annotation.TimeConsumeLogAnnotation)&quot;) 
+
+
+</code></pre>
+
+<p>而aspectj的编译器会识别出<strong>方法调用</strong>和<strong>方法执行</strong>两个阶段的切入点，因为会在这两个阶段都执行</p>
+
+<p>通过将切面表达式修改为</p>
+
+<pre><code class="language-java">@Pointcut(&quot;execution(* *(..)) &amp;&amp; @annotation(com.sf.isic.rrcs.engine.annotation.TimeConsumeLogAnnotation)&quot;) 
+
+
+</code></pre>
+
+<p>可以限定成只识别<strong>方法执行</strong>这个阶段</p>
+
+<h4 id="2-多模块项目aspectj编译失败">（2）多模块项目aspectj编译失败</h4>
+
+<blockquote>
+<p>如果在多模块项目，在具体的某个子模块声明切面类，定义切点表达式，但是连接点切分散在各个其他模块时，ajc扫描具到切点表达式时，只会在本模块扫描对应的连接点，其他模块的连接点是没有办法编绎期切入切面，ajc是不会在编绎其他模块时再去扫描有没有某个切点表达式与当前连接点匹配的</p>
+</blockquote>
+
+<p>通过在每个模块都加上自定义注解和切面，可解决编译的问题</p>
+
+<h2 id="更多的操作">更多的操作</h2>
+
+<p>由于自定义注解支持赋值，Aspectj切面又可以拦截到方法，并且通过反射获取到方法参数，因此可以在这基础做更多定制化的优化</p>
+
+<h2 id="参考链接">参考链接</h2>
+
+<p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-springaopcglib/index.html">Spring AOP 实现原理与 CGLIB 应用</a></p>
+
+<p><a href="https://juejin.im/entry/5a40abb16fb9a0451e400886">关于AspectJ你可能不知道的事</a></p>
+
+<p><a href="https://blog.csdn.net/u011116672/article/details/63685340">AspectJ切面执行两次原因分析</a></p>
+
+<p><a href="http://blog.51cto.com/5914679/2096848">多模块maven项目使用Eclipse的 AspectJ编绎期织入</a></p>
+
+
+                
+
+                <hr>
+                <ul class="pager">
+                    
+                    
+                </ul>
+
+                
+<div id="disqus-comment"></div>
+
+
+
+            </div>
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        <a href="/tags/aspectj" title="aspectj">
+                            aspectj
+                        </a>
+                        
+                        
+                        
+                        <a href="/tags/%E6%80%A7%E8%83%BD" title="性能">
+                            性能
+                        </a>
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                   
+                   <li>
+                       <a href="" rel="alternate" type="application/rss+xml" title="Jarvis&#39;s share" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fa fa-circle fa-stack-2x"></i>
+                               <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+                   
+                    
+                    <li>
+                        <a href="mailto:pangjuewei@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                    
+                    
+
+                    
+
+		    
+                    
+                    <li>
+                        <a target="_blank" href="/img/wechat.jpg">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-wechat fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/AkitaShiba">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		    
+                    
+                    
+                </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Jarvis&#39;s share 2019
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        async("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    async("https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+</body>
+</html>
