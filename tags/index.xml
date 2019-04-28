@@ -6,10 +6,28 @@
     <description>Recent content in Tags on 绝味的日常</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 27 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 28 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://AkitaShiba.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>NLP</title>
+      <link>https://AkitaShiba.github.io/tags/nlp/</link>
+      <pubDate>Sun, 28 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://AkitaShiba.github.io/tags/nlp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>概率统计</title>
+      <link>https://AkitaShiba.github.io/tags/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</link>
+      <pubDate>Sun, 28 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://AkitaShiba.github.io/tags/%E6%A6%82%E7%8E%87%E7%BB%9F%E8%AE%A1/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>AspectJ</title>
